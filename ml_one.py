@@ -1,53 +1,20 @@
-i, wholepack, net = int(input()), [], {}
-for j in range (i):
-    wholepack += [input().split(';')]
+import pandas as pd
+df = pd.read_csv(r"C:\Users\chist\Desktop\ML\UNZIP_ME_FOR_NOTEBOOKS_ML_RUS_V1\DATA\airline_tweets.csv")
 
-for team in wholepack:
-    if team[0] not in net:
-        net[team[0]] = [0,0,0,0,0]
-        net[team[0]][0] += 1
-        if int(team[1]) > int(team[3]):
-            net[team[0]][1] += 1
-            net[team[0]][4] += 3
-        elif int(team[1]) < int(team[3]):
-            net[team[0]][3] += 1
-        else:
-            net[team[0]][2] += 1
-            net[team[0]][4] += 1
+data = df[['airline_sentiment', 'text']]
+X = data['text']
+y = data['airline_sentiment']
 
-    else:
-        net[team[0]][0] += 1
-        if int(team[1]) > int(team[3]):
-            net[team[0]][1] += 1
-            net[team[0]][4] += 3
-        elif int(team[1]) < int(team[3]):
-            net[team[0]][3] += 1
-        else:
-            net[team[0]][2] += 1
-            net[team[0]][4] += 1
+# сначала разбиение данных, а потом векторизацию - воизбежание утечки данных в тестовый набор
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=101)
 
-    if team[2] not in net:
-        net[team[2]] = [0,0,0,0,0]
-        net[team[2]][0] += 1
-        if int(team[1]) < int(team[3]):
-            net[team[2]][1] += 1
-            net[team[2]][4] += 3
-        elif int(team[1]) > int(team[3]):
-            net[team[2]][3] += 1
-        else:
-            net[team[2]][2] += 1
-            net[team[2]][4] += 1
-
-    else:
-        net[team[2]][0] += 1
-        if int(team[1]) < int(team[3]):
-            net[team[2]][1] += 1
-            net[team[2]][4] += 3
-        elif int(team[1]) > int(team[3]):
-            net[team[2]][3] += 1
-        else:
-            net[team[2]][2] += 1
-            net[team[2]][4] += 1
+from sklearn.feature_extraction.text import TfidfVectorizer
+vec = TfidfVectorizer(stop_words='english')
+# синтаксис векторизации похож на масштабирование данных
+vec.fit(X_train)
+X_train_vec = vec.transform(X_train)
+X_test_vec = vec.transform(X_test)
 
 from sklearn.svm import LinearSVC
 model = LinearSVC()
@@ -62,4 +29,3 @@ pipe = Pipeline([('vec', TfidfVectorizer()),
 pipe.fit(X_train, y_train)
 
 print('Введите фразу: ', pipe.predict([input()]))
-
