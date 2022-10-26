@@ -61,4 +61,8 @@ pipe = Pipeline([('vec', TfidfVectorizer()),
                  ('svc', LinearSVC())])
 pipe.fit(X_train, y_train)
 
+<<<<<<< HEAD
 print('Введите фразу: ', pipe.predict([input()]))
+=======
+print('Введите фразу: ', pipe.predict([input()]))
+>>>>>>> parent of 45f4c00 (add whitespace in print func)
