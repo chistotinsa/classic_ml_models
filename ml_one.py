@@ -28,4 +28,4 @@ pipe = Pipeline([('vec', TfidfVectorizer()),
                  ('svc', LinearSVC())])
 pipe.fit(X_train, y_train)
 
-print('Введите фразу и комп классифицирует ее ', pipe.predict([input()]))
+print('Введите фразу', pipe.predict([input()]))
